@@ -1,4 +1,4 @@
-# loader responsible for the countries table
+# loader for the 'countries' table
 
 import csv
 
@@ -15,14 +15,15 @@ def load_countries(path: str) -> list[dict]:
                     name = row["country"].strip()
 
                     if not name:
-                        raise ValueError("Country name empty.")
+                        raise ValueError("Country name field is empty.")
 
                     countries.append({
                         "id": country_id,
                         "name": name
                     })
+                    
                 except (KeyError, ValueError) as e:
-                    print(f"Skipping row {i}: {e} because of error.")
+                    print(f"Row {i}: {e} skipped because of an error.")
 
     except FileNotFoundError:
         print(f"File not found: {path}")

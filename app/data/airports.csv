@@ -1,0 +1,25 @@
+id,name,code,city_id
+1,Heathrow Airport,LHR,1
+2,San Antonio International Airport,SAT,2
+3,Kingsford Smith Airport,SYD,3
+4,Charles de Gaulle Airport,CDG,4
+5,"Budapest, Ferihegy",BUD,5
+6,New Chitose Airport,SPK,7
+7,Haneda Airport,HND,7
+8,Gimpo International Airport,SEL,8
+9,Galeao International Airport,GIG,9
+10,Vilnius International Airport,VNO,10
+11,Vancouver International Airport,YVR,11
+12,Amsterdam Airport Schiphol,AMS,12
+13,El Nhouza Airport,ALY,13
+14,Guangzhou Baiyun International Airport,CAN,14
+15,Noi Bai International Airport,HAN,15
+16,Halim Perdanakusuma International Airport,HLP,16
+17,Sultan Abdul Aziz Shah Airport,SZB,17
+18,Ninoy Aquino International Airport,MNL,18
+19,Suvarnabhumi Airport,BKK,19
+20,Wattay International Airport,VTE,20
+21,Phnom Penh International Airport,PNH,21
+22,Manchester Airport,MAN,22
+23,Denver International Airport,DEN,23
+24,Chengdu Shuangliu International,CTU,36

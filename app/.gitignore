@@ -1,0 +1,41 @@
+# macOS
+.DS_Store
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.env
+.env
+.venv/
+venv/
+ENV/
+env/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# SQLite DB
+*.db
+*.sqlite3
+
+# Logs
+*.log
+
+# Coverage & testing
+htmlcov/
+.tox/
+.coverage
+coverage.xml
+nosetests.xml
+pytest_cache/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
