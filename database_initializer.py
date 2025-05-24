@@ -23,6 +23,7 @@ class City(Base):
     name = Column(String, nullable=False)
     country_id = Column(Integer, ForeignKey('countries.id'), nullable=False)
 
+    airways = relationship('Airway', back_populates='hq_city')
     country = relationship('Country', back_populates='cities')
     airports = relationship('Airport', back_populates='city')
 
@@ -58,10 +59,11 @@ class Flight(Base):
 class Airway(Base):
     __tablename__ = 'airways'
 
-    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
-    hq_location = Column(String)
+    city_id = Column(Integer, ForeignKey('cities.id'), nullable=False)
 
+    hq_city = relationship('City', back_populates='airways')
     flights = relationship('Flight', back_populates='airway')
 
 class Booking(Base):
@@ -75,7 +77,6 @@ class Booking(Base):
     email = Column(String, nullable=False)
 
     flight = relationship('Flight', back_populates='bookings')
-
 
 engine = create_engine('sqlite:///flight_radar.db', echo=False)
 
