@@ -3,7 +3,7 @@ from sqlalchemy import insert
 from sqlalchemy.sql.dml import Insert
 from database_initializer import Booking
 
-def insert_booking(booking_data: Dict[str, Any]) -> Insert:
+def insertBooking(booking_data: Dict[str, Any]) -> Insert:
 
     new_booking = insert(Booking).values(booking_data)
     

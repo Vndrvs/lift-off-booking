@@ -23,7 +23,7 @@ class City(Base):
     name = Column(String, nullable=False)
     country_id = Column(Integer, ForeignKey('countries.id'), nullable=False)
 
-    airways = relationship('Airway', back_populates='hq_city')
+    airlines = relationship('Airline', back_populates='hq_city')
     country = relationship('Country', back_populates='cities')
     airports = relationship('Airport', back_populates='city')
 
@@ -45,7 +45,7 @@ class Flight(Base):
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     date = Column(DateTime, nullable=False)
     is_international = Column(Boolean, nullable=False)
-    airway_id = Column(Integer, ForeignKey('airways.id'), nullable=False)
+    airline_id = Column(Integer, ForeignKey('airlines.id'), nullable=False)
     origin_airport_id = Column(Integer, ForeignKey('airports.id'), nullable=False)
     destination_airport_id = Column(Integer, ForeignKey('airports.id'), nullable=False)
     ticket_fare = Column(Float, nullable=False)
@@ -53,18 +53,18 @@ class Flight(Base):
 
     origin_airport = relationship('Airport', foreign_keys=[origin_airport_id], back_populates='origin_flights')
     destination_airport = relationship('Airport', foreign_keys=[destination_airport_id], back_populates='destination_flights')
-    airway = relationship('Airway', back_populates='flights')
+    airline = relationship('Airline', back_populates='flights')
     bookings = relationship('Booking', back_populates='flight')
 
-class Airway(Base):
-    __tablename__ = 'airways'
+class Airline(Base):
+    __tablename__ = 'airlines'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
     city_id = Column(Integer, ForeignKey('cities.id'), nullable=False)
 
-    hq_city = relationship('City', back_populates='airways')
-    flights = relationship('Flight', back_populates='airway')
+    hq_city = relationship('City', back_populates='airlines')
+    flights = relationship('Flight', back_populates='airline')
 
 class Booking(Base):
     __tablename__ = 'bookings'

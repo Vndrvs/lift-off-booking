@@ -2,7 +2,7 @@
 
 import csv
 
-def load_countries(path: str) -> list[dict]:
+def loadCountries(path: str) -> list[dict]:
 
     countries = []
 

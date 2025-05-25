@@ -1,4 +1,5 @@
-class Airline():
-    def __init__(self, name, headquarters_city_id):
+class AirlineModel:
+    def __init__(self, id: int, name: str, hq_city_id: int):
+        self.id = id
         self.name = name
-        self.headquarters_city_id = headquarters_city_id
+        self.hq_city_id = hq_city_id

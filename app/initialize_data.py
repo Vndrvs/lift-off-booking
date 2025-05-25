@@ -5,7 +5,7 @@ from seeders.country_seeder import load_countries
 from seeders.city_seeder import load_cities
 from seeders.airport_seeder import load_airports
 
-def seed_countries(session):
+def seedCountries(session):
 
     countries = load_countries("app/data/countries.csv")
     if not countries:
@@ -19,7 +19,7 @@ def seed_countries(session):
         session.rollback()
         print(f"Insertion error: {e}")
 
-def seed_cities(session):
+def seedCities(session):
 
     cities = load_cities("app/data/cities.csv")
     if not cities:
@@ -34,7 +34,7 @@ def seed_cities(session):
         session.rollback()
         print(f"Insertion error: {e}")
 
-def seed_airports(session):
+def seedAirports(session):
 
     airports = load_airports("app/data/airports.csv")
     if not airports:
@@ -50,10 +50,10 @@ def seed_airports(session):
         print(f"Insertion error: {e}")
 
 
-def run_seeding():
+def runSeeding():
     with Session(bind=engine) as session:
-        #seed_countries(session)
-        #seed_cities(session)
-        seed_airports(session)
+        seedCountries(session)
+        seedCities(session)
+        seedAirports(session)
 
-run_seeding()
+runSeeding()

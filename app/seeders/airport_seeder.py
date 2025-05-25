@@ -2,7 +2,7 @@
 
 import csv
 
-def load_airports(path: str) -> list[dict]:
+def loadAirports(path: str) -> list[dict]:
 
     airports = []
 
