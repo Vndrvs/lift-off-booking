@@ -1,5 +1,4 @@
-from abc import ABC
-from datetime import datetime
+# added 'isInternational' variable which is used for proper database schema mapping
 
 from abc import ABC
 from datetime import datetime
@@ -9,10 +8,12 @@ class FlightBase(ABC):
         self,
         id: int,
         date: str,
+        isInternational: bool,
         airlineId: int,
         originAirportId: int,
         destinationAirportId: int,
-        isInternational: bool
+        ticketFare: int,
+        passengerLimit: int
     ):
         self.id: int = id
         self.date: datetime = datetime.fromisoformat(date)
@@ -20,3 +21,5 @@ class FlightBase(ABC):
         self.airlineId: int = airlineId
         self.originAirportId: int = originAirportId
         self.destinationAirportId: int = destinationAirportId
+        self.ticketFare: int = ticketFare
+        self.passengerLimit: int = passengerLimit
