@@ -34,19 +34,19 @@ def displayMainMenu() -> int:
         except ValueError:
             print("Please enter a valid number.")
 
-def displayFlightList(flight_list):
+def displayFlightList(flightList):
 
-    column_width = "| {:<4} | {:<19} | {:<10} → {:<10} | {:<15} |"
+    columnWidth = "| {:<4} | {:<19} | {:<10} → {:<10} | {:<15} |"
     
-    total_width = len(column_width.format("", "", "", "", ""))
+    totalWidth = len(columnWidth.format("", "", "", "", ""))
     
     print("\n")
-    print("┌" + "─" * (total_width - 2) + "┐")
-    print("|{:^{width}}|".format("Flight List - Departures", width=total_width - 2))
-    print("|" + "─" * (total_width - 2) + "|")
+    print("┌" + "─" * (totalWidth - 2) + "┐")
+    print("|{:^{width}}|".format("Flight List - Departures", width=totalWidth - 2))
+    print("|" + "─" * (totalWidth - 2) + "|")
 
-    for flight in flight_list:
-        print(column_width.format(
+    for flight in flightList:
+        print(columnWidth.format(
             flight.id,
             flight.date.strftime("%Y-%m-%d %H:%M"),
             flight.origin_airport.code,
@@ -54,25 +54,25 @@ def displayFlightList(flight_list):
             flight.airway.name[:15]
         ))
 
-    print("└" + "─" * (total_width - 2) + "┘")
+    print("└" + "─" * (totalWidth - 2) + "┘")
     input("Please enter the number of the flight you wish to book a ticket for: ")
 
 def getFlightsInitializer():
 
     try:
-        flight_data = getAllFlights()
-        flights = session.execute(flight_data).scalars().all()
+        flightData = getAllFlights()
+        flights = session.execute(flightData).scalars().all()
 
         if not flights:
-                print("NO FLIGHTS AVAILABLE")
-                input("Press Enter to return to main menu...")
+                print("No flights are available currently.")
+                input("Press Enter to return to main menu.")
                 return
         
         displayFlightList(flights)
         
     except Exception as e:
-        print((f"ERROR RETRIEVING FLIGHTS: {str(e)}"))
-        input("Press Enter to return to main menu...")
+        print((f"Couldn't retrieve flights: {str(e)}"))
+        input("Press Enter to return to main menu.")
 
 
 def inputHandler():
@@ -84,10 +84,10 @@ def inputHandler():
             getFlightsInitializer()
         elif choice == 2:
             print("Cancel Booking - Coming Soon")
-            input("Press Enter to return to main menu...")
+            input("Press Enter to return to main menu.")
         elif choice == 3:
             print("Booking List - Coming Soon")
-            input("Press Enter to return to main menu...")
+            input("Press Enter to return to main menu.")
 
 inputHandler()
 

@@ -1,13 +1,13 @@
 from sqlalchemy import insert
 from sqlalchemy.orm import Session
 from database_initializer import Country, City, Airport, engine
-from seeders.country_seeder import load_countries
-from seeders.city_seeder import load_cities
-from seeders.airport_seeder import load_airports
+from seeders.country_seeder import loadCountries
+from seeders.city_seeder import loadCities
+from seeders.airport_seeder import loadAirports
 
 def seedCountries(session):
 
-    countries = load_countries("app/data/countries.csv")
+    countries = loadCountries("app/data/countries.csv")
     if not countries:
         print("0 countries found.")
         return
@@ -21,7 +21,7 @@ def seedCountries(session):
 
 def seedCities(session):
 
-    cities = load_cities("app/data/cities.csv")
+    cities = loadCities("app/data/cities.csv")
     if not cities:
         print("0 cities found.")
         return
@@ -36,7 +36,7 @@ def seedCities(session):
 
 def seedAirports(session):
 
-    airports = load_airports("app/data/airports.csv")
+    airports = loadAirports("app/data/airports.csv")
     if not airports:
         print("0 cities found.")
         return

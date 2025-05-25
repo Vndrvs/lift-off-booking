@@ -3,7 +3,7 @@ from sqlalchemy.orm import aliased
 from sqlalchemy.sql import Select
 from database_initializer import Flight, Airport, City, Country
 
-def getAllFlights() -> Select:
+def GetAllFlights() -> Select:
 
     origin_airport = aliased(Airport)
     destination_airport = aliased(Airport)
@@ -13,7 +13,7 @@ def getAllFlights() -> Select:
     destination_country = aliased(Country)
 
 
-    all_flights = (
+    allFlights = (
         select(Flight)
         .join(Flight.airline)
         .join(origin_airport, Flight.origin_airport)
@@ -24,4 +24,4 @@ def getAllFlights() -> Select:
         .join(destination_country, destination_city.country)
     )
 
-    return all_flights
+    return allFlights

@@ -2,9 +2,9 @@ from sqlalchemy import select
 from sqlalchemy.sql.dml import Select
 from database_initializer import Booking, Flight, Airport, City
 
-def get_all_bookings() -> Select:
+def GetAllBookings() -> Select:
 
-    all_bookings = (
+    allBookings = (
         select(Booking)
         .join(Booking.flight)
         .join(Flight.origin_airport)
@@ -12,4 +12,4 @@ def get_all_bookings() -> Select:
         .join(City.country)
     )
 
-    return all_bookings
+    return allBookings
