@@ -12,7 +12,7 @@ class Country(Base):
     __tablename__ = 'countries'
 
     id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=False, unique=True)
 
     cities = relationship('City', back_populates='country')
 
@@ -20,7 +20,7 @@ class City(Base):
     __tablename__ = 'cities'
 
     id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=False, unique=True)
     country_id = Column(Integer, ForeignKey('countries.id'), nullable=False)
 
     airlines = relationship('Airline', back_populates='hq_city')
@@ -31,7 +31,7 @@ class Airport(Base):
     __tablename__ = 'airports'
 
     id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=False, unique=True)
     code = Column(String, nullable=False)
     city_id = Column(Integer, ForeignKey('cities.id'), nullable=False)
 
@@ -60,7 +60,7 @@ class Airline(Base):
     __tablename__ = 'airlines'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=False, unique=True)
     city_id = Column(Integer, ForeignKey('cities.id'), nullable=False)
 
     hq_city = relationship('City', back_populates='airlines')

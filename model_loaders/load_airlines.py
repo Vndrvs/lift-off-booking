@@ -6,7 +6,7 @@
 import csv
 from models.airline import AirlineModel
 
-def loadAirlinesFromCsv(path: str) -> list[AirlineModel]:
+def LoadAirlinesFromCsv(path: str) -> list[AirlineModel]:
 
     airlines = []
 
@@ -31,9 +31,9 @@ def loadAirlinesFromCsv(path: str) -> list[AirlineModel]:
 
     return airlines
 
-def PrepareObjects(airlines: list[AirlineModel]) -> list[dict]:
+def PrepareAirlineList(airlines: list[AirlineModel]) -> list[dict]:
 
-    objects = []
+    airlineList = []
 
     for airline in airlines:
         obj = {
@@ -41,6 +41,6 @@ def PrepareObjects(airlines: list[AirlineModel]) -> list[dict]:
             "name": airline.name,
             "city_id": airline.hqCityId
         }
-        objects.append(obj)
+        airlineList.append(obj)
 
-    return objects
+    return airlineList

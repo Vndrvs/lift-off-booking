@@ -6,7 +6,6 @@ from datetime import datetime
 class FlightBase(ABC):
     def __init__(
         self,
-        id: int,
         date: str,
         isInternational: bool,
         airlineId: int,
@@ -15,7 +14,6 @@ class FlightBase(ABC):
         ticketFare: int,
         passengerLimit: int
     ):
-        self.id: int = id
         self.date: datetime = datetime.fromisoformat(date)
         self.isInternational: bool = isInternational
         self.airlineId: int = airlineId
