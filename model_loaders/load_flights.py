@@ -30,8 +30,6 @@ def LoadFlightsFromCsv(path: str) -> list:
                     ticketFare = row["ticket_fare"]
                     passengerLimit = row["passenger_limit"]
 
-                    print(f"Processing row {i}: {date}, {airlineId}, {originAirportId}, {destinationAirportId}, {ticketFare}, {passengerLimit}")
-
                     if not isInternational:
                         flights.append(LocalFlightModel(date, airlineId, originAirportId, destinationAirportId, ticketFare, passengerLimit))
                     else:
@@ -46,7 +44,6 @@ def LoadFlightsFromCsv(path: str) -> list:
         print(f"Error: {e}")
 
     return flights
-
 
 def PrepareFlightList(flights: list) -> list[dict]:
     flightList = []
