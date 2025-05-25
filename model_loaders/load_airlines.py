@@ -1,8 +1,3 @@
-import sys
-import os
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
 import csv
 from models.airline import AirlineModel
 
@@ -17,7 +12,7 @@ def loadAirlines(path: str) -> list[AirlineModel]:
                 try:
                     id = int(row["id"])
                     name = row["name"].strip()
-                    hqCityId = int(row["city_id"])
+                    hqCityId = int(row["hq_city"])
 
                     airlines.append(AirlineModel(id, name, hqCityId))
 
@@ -40,13 +35,3 @@ def CreateModelDictionary(path: str) -> dict[int, AirlineModel]:
         airlineDictionary[airline.id] = airline
 
     return airlineDictionary
-
-if __name__ == "__main__":
-    path = "data/airlines.csv"
-
-    airlines_by_id = CreateModelDictionary(path)
-
-    print(f"✅ Loaded {len(airlines_by_id)} airlines.\n")
-
-    for id, airline in airlines_by_id.items():
-        print(f"🛩️  ID: {id} | Name: {airline.name} | HQ City ID: {airline.hqCityId}")
