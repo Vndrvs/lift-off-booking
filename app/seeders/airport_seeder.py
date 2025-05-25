@@ -27,7 +27,7 @@ def loadAirports(path: str) -> list[dict]:
                     })
                     
                 except (KeyError, ValueError) as e:
-                    print(f"Row {i}: {e} skipped because of an error.")
+                    print(f"Row {i} skipped because of an error: {e}")
 
     except FileNotFoundError:
         print(f"File not found: {path}")
