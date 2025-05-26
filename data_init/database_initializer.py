@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy import create_engine
 import logging
+import os
 
 logging.getLogger('sqlalchemy').setLevel(logging.CRITICAL)
 
@@ -78,6 +79,10 @@ class Booking(Base):
 
     flight = relationship('Flight', back_populates='bookings')
 
-engine = create_engine('sqlite:///flight_radar.db', echo=False)
+db_path = os.path.abspath(os.path.join(__file__, "..", "..", "flight_radar.db"))
+engine = create_engine(f"sqlite:///{db_path}", echo=False)
 
-Base.metadata.create_all(engine)
+def InitializeDatabase():
+    print("Creating tables...")
+    Base.metadata.create_all(engine)
+    print("Tables created.")

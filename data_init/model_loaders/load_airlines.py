@@ -4,7 +4,13 @@
 # 3. (External step) run_loaders.py commits the inserts into the session
 
 import csv
+
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent.parent))
+
 from models.airline import AirlineModel
+
 
 def LoadAirlinesFromCsv(path: str) -> list[AirlineModel]:
 

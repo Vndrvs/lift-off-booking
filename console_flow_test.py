@@ -1,6 +1,6 @@
 from queries.get_all_flights import getAllFlights 
 from sqlalchemy.orm import Session
-from database_initializer import engine
+from data_init.database_initializer import engine
 import logging
 
 session = Session(bind=engine)

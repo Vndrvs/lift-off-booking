@@ -4,10 +4,10 @@
 
 from sqlalchemy.orm import Session
 from sqlalchemy import insert, select
-from database_initializer import engine, Airline, Flight
-from model_loaders.load_airlines import LoadAirlinesFromCsv, PrepareAirlineList
-from model_loaders.load_flights import LoadFlightsFromCsv, PrepareFlightList
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
+from data_init.database_initializer import engine, Airline, Flight
+from data_init.model_loaders.load_airlines import LoadAirlinesFromCsv, PrepareAirlineList
+from data_init.model_loaders.load_flights import LoadFlightsFromCsv, PrepareFlightList
 
 # this tuple is responsible for loading the flight records in the database into the memory for comparison
 def GetExistingFlightTuples(session):
@@ -84,5 +84,3 @@ def LoadAllData():
             session.commit()
     except Exception as e:
         print(f"Insertion error: {e}")
-
-LoadAllData()

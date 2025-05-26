@@ -5,10 +5,13 @@
 # 4. (External step) run_loaders.py commits the inserts into the session
 
 import csv
+
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent.parent))
+
 from models.international_flight import InternationalFlightModel
 from models.local_flight import LocalFlightModel
-from datetime import datetime
-
 
 def LoadFlightsFromCsv(path: str) -> list:
     flights = []
@@ -61,3 +64,4 @@ def PrepareFlightList(flights: list) -> list[dict]:
         flightList.append(obj)
 
     return flightList
+
