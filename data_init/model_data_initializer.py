@@ -5,9 +5,10 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import insert, select
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
-from data_init.database_initializer import engine, Airline, Flight
+from data_init.database_initializer import engine, Airline, Flight, Booking
 from data_init.model_loaders.load_airlines import LoadAirlinesFromCsv, PrepareAirlineList
 from data_init.model_loaders.load_flights import LoadFlightsFromCsv, PrepareFlightList
+from data_init.model_loaders.load_bookings import LoadBookingsFromCsv, PrepareBookingList
 from utils.insert_logger import Logger
 
 # inserts airlines into the table
@@ -17,13 +18,13 @@ def InsertAirlines(session):
 
     try:
         airlines = LoadAirlinesFromCsv("data/airlines.csv")
-        airline_rows = PrepareAirlineList(airlines)
+        airlineRecords = PrepareAirlineList(airlines)
 
-        if not airline_rows:
+        if not airlineRecords:
             print("No airlines found.")
             return
 
-        stmt = sqlite_insert(Airline).values(airline_rows)
+        stmt = sqlite_insert(Airline).values(airlineRecords)
     
         # if the airline name matches an existing one in the database, that record will be skipped
         stmt = stmt.on_conflict_do_nothing(index_elements=["name"])
@@ -92,12 +93,37 @@ def InsertFlights(session):
         session.rollback()
         print(f"Flights: Insertion error")
 
+def InsertBookings(session):
+
+    initializedRecords = 0
+
+    try:
+        bookings = LoadBookingsFromCsv("data/bookings.csv")
+        bookingRecords = PrepareBookingList(bookings)
+
+        if not bookingRecords:
+            print("No bookings found.")
+            return
+
+        stmt = sqlite_insert(Booking).values(bookingRecords)
+    
+        # if the airline name matches an existing one in the database, that record will be skipped
+        result = session.execute(stmt)
+        initializedRecords = result.rowcount
+
+        Logger(initializedRecords, "Bookings")
+
+    except Exception as e:
+        session.rollback()
+        print(f"Bookings: Insertion error")
+
 def LoadAllData():
 
     try:
         with Session(bind=engine) as session:
             InsertAirlines(session)
             InsertFlights(session)
+            InsertBookings(session)
             session.commit()
         
         print()

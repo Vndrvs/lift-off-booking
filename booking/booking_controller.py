@@ -1,35 +1,37 @@
 import sys
 from pathlib import Path
-sys.path.append(str(Path(__file__).parent.parent.parent))
+sys.path.append(str(Path(__file__).parent.parent))
 
-from booking.validators import validate_name, validate_email
-#from booking.booking_logic import process_booking
-from models.booking import BookingModel
 from datetime import datetime
+from sqlalchemy.sql.dml import Insert
+from models.booking import BookingModel
+from queries.add_booking import InsertBooking as InsertBookingQuery
 
-def CollectBookingInput(flight_ids: list[int]):
+# prompts user for flight id (later used in validator)
+def PromptForFlightId() -> int:
 
-    while True:
-        firstName = input("First name: ")
-        surname = input("Surname: ")
-        email = input("Email: ")
-       # if not validate_email(email):
-           # print("Invalid email.")
-           # continue
+    flightId = int(input("Please enter the number of the flight you want to book a ticket for: "))
 
-        try:
-            flightId = int(input("Enter Flight number: "))
-            if flightId not in flight_ids:
-                print("Invalid Flight number. Please try again: ")
-                continue
+    return flightId
 
-        except ValueError:
-            print("Please only type numbers.")
-            continue
+# prompts user for flight information (stored in booking instance)
+def CollectBookingInfo() -> tuple[str, str, str]:
 
-        break
+    firstName = input("First name: ")
+    surname = input("Surname: ")
+    email = input("Email: ")
 
-    return BookingModel(
+    return firstName, surname, email
+
+def PromptForCancelId() -> int:
+
+    bookingId = int(input("Please enter the number of the flight you want to book a ticket for: "))
+
+    return bookingId
+
+def CreateBookingModel(flightId: int, firstName: str, surname: str, email: str) -> BookingModel:
+
+    instance = BookingModel(
         bookingDate=datetime.now().isoformat(),
         flightId=flightId,
         firstName=firstName,
@@ -37,7 +39,15 @@ def CollectBookingInput(flight_ids: list[int]):
         email=email
     )
 
-def InsertBooking(booking: BookingModel):
+    return instance
 
-    
+def InsertBooking(booking: BookingModel) -> Insert:
+    booking_dict = {
+        "booking_date": booking.bookingDate,
+        "flight_id": booking.flightId,
+        "first_name": booking.firstName,
+        "surname": booking.surname,
+        "email": booking.email
+    }
 
+    return InsertBookingQuery(booking_dict)

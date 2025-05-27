@@ -1,6 +1,7 @@
 from queries.get_all_flights import GetAllFlights 
 from sqlalchemy.orm import Session
 from data_init.database_initializer import engine
+from models.flight import FlightBase
 import logging
 
 session = Session(bind=engine)
@@ -50,29 +51,29 @@ def displayFlightList(flightList):
             flight.date.strftime("%Y-%m-%d %H:%M"),
             flight.origin_airport.code,
             flight.destination_airport.code,
-            flight.airway.name[:15]
+            flight.airline.name[:15]
         ))
 
     print("└" + "─" * (totalWidth - 2) + "┘")
-    input("Please enter the number of the flight you wish to book a ticket for: ")
 
-def getFlightsInitializer():
 
+def getFlightsInitializer() -> list[FlightBase] | None:
     try:
-        flightData = GetAllFlights()
-        flights = session.execute(flightData).scalars().all()
+        with Session(bind=engine) as session:
+            flightData = GetAllFlights()
+            flights = session.execute(flightData).scalars().all()
 
-        if not flights:
+            if not flights:
                 print("No flights are available currently.")
                 input("Press Enter to return to main menu.")
-                return
-        
-        displayFlightList(flights)
-        
-    except Exception as e:
-        print((f"Couldn't retrieve flights: {str(e)}"))
-        input("Press Enter to return to main menu.")
+                return None
 
+            return flights
+
+    except Exception as e:
+        print(f"Couldn't retrieve flights: {str(e)}")
+        input("Press Enter to return to main menu.")
+        return None
 
 def InputHandler():
     while True:
@@ -89,4 +90,3 @@ def InputHandler():
             input("Press Enter to return to main menu.")
 
 InputHandler()
-
