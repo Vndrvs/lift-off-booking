@@ -1,5 +1,4 @@
-from sqlalchemy import select
-from sqlalchemy.sql import Select
+from sqlalchemy import Select, select
 from data_init.database_initializer import Flight
 
 def GetFlightTime(flightId: int) -> Select:

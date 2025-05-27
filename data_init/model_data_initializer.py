@@ -93,6 +93,9 @@ def InsertFlights(session):
         session.rollback()
         print(f"Flights: Insertion error")
 
+
+# inserts bookings into the table
+# checks whether a booking with the same first + last name and flight ID exists in the system
 def InsertBookings(session):
 
     initializedRecords = 0

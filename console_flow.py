@@ -129,7 +129,8 @@ def InputHandler():
             flights = getFlightsInitializer()
             if flights:
                 displayFlightList(flights)
-                BookingFlow()
+                ticketFare = BookingFlow()
+                print(f"Ticket fare: {ticketFare} HUF.")
                 input("Press Enter to return to main menu.")
         elif choice == 2:
             bookings = getBookingsInitializer()

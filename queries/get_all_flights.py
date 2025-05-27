@@ -1,6 +1,5 @@
-from sqlalchemy import select
+from sqlalchemy import Select, select
 from sqlalchemy.orm import aliased, joinedload
-from sqlalchemy import Select
 from data_init.database_initializer import Flight, Airport, City, Country
 
 def GetAllFlights() -> Select:

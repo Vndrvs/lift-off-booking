@@ -1,3 +1,8 @@
+# function flow:
+# 1. LoadBookingsFromCsv expects a csv and examines the results
+# 2. PrepareObjects creates a list of dictionaries which contains the data of the instances
+# 3. (External step) run_loaders.py commits the inserts into the session
+
 import csv
 import sys
 from pathlib import Path

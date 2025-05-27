@@ -3,7 +3,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
 from datetime import datetime
-from sqlalchemy.sql.dml import Insert, Delete
+from sqlalchemy import Insert, Delete
 from models.booking import BookingModel
 from queries.add_booking import InsertBooking as InsertBookingQuery
 from queries.delete_booking import DeleteBooking
