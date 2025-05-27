@@ -3,9 +3,11 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
 from datetime import datetime
-from sqlalchemy.sql.dml import Insert
+from sqlalchemy.sql.dml import Insert, Delete
 from models.booking import BookingModel
 from queries.add_booking import InsertBooking as InsertBookingQuery
+from queries.delete_booking import DeleteBooking
+
 
 # prompts user for flight id (later used in validator)
 def PromptForFlightId() -> int:
@@ -25,7 +27,7 @@ def CollectBookingInfo() -> tuple[str, str, str]:
 
 def PromptForCancelId() -> int:
 
-    bookingId = int(input("Please enter the number of the flight you want to book a ticket for: "))
+    bookingId = int(input("Please enter the number of the flight you want to cancel your booking for: "))
 
     return bookingId
 
@@ -51,3 +53,9 @@ def InsertBooking(booking: BookingModel) -> Insert:
     }
 
     return InsertBookingQuery(booking_dict)
+
+def CancelBooking(booking_id: int) -> Delete:
+
+    stmt = DeleteBooking(booking_id)
+
+    return stmt

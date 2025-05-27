@@ -106,10 +106,10 @@ def InsertBookings(session):
             return
 
         stmt = sqlite_insert(Booking).values(bookingRecords)
-    
-        # if the airline name matches an existing one in the database, that record will be skipped
+        # validate based on name and flight
+        stmt = stmt.on_conflict_do_nothing(index_elements=["first_name", "surname", "flight_id"])
         result = session.execute(stmt)
-        initializedRecords = result.rowcount
+        initializedRecords = result.rowcount or 0
 
         Logger(initializedRecords, "Bookings")
 

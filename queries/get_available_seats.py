@@ -1,5 +1,4 @@
-from sqlalchemy import select, func
-from sqlalchemy.sql.selectable import Select
+from sqlalchemy import Select, select, func
 import sys
 import os
 

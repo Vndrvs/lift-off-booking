@@ -1,15 +1,14 @@
 from sqlalchemy import select
-from sqlalchemy.sql.dml import Select
-from data_init.database_initializer import Booking, Flight, Airport, City
+from sqlalchemy.orm import joinedload
+from data_init.database_initializer import Booking, Flight
 
-def GetAllBookings() -> Select:
-
-    allBookings = (
+def GetAllBookings():
+    return (
         select(Booking)
-        .join(Booking.flight)
-        .join(Flight.origin_airport)
-        .join(Airport.city)
-        .join(City.country)
+        .options(
+            joinedload(Booking.flight)
+            .joinedload(Flight.origin_airport),
+            joinedload(Booking.flight)
+            .joinedload(Flight.destination_airport)
+        )
     )
-
-    return allBookings

@@ -1,7 +1,11 @@
 from queries.get_all_flights import GetAllFlights 
+from queries.get_all_bookings import GetAllBookings
 from sqlalchemy.orm import Session
 from data_init.database_initializer import engine
 from models.flight import FlightBase
+from models.booking import BookingModel
+from booking.booking_logic import BookingFlow, CancelFlow
+
 import logging
 
 session = Session(bind=engine)
@@ -22,15 +26,16 @@ def displayMainMenu() -> int:
     print("|{:^51}|".format("1 - Book a Flight"))
     print("|{:^51}|".format("2 - Cancel Booking"))
     print("|{:^51}|".format("3 - Check Booking List"))
+    print("|{:^51}|".format("4 - Exit"))
     print("└" + "─" * 51 + "┘")
     
     while True:
         try:
-            choice = int(input("Please enter a number to choose your next step (1 - Book a Flight, 2 - Cancel Booking, 3 - Check Booking List): "))
-            if choice in [1, 2, 3]:
+            choice = int(input("Please enter a number to choose your next step (1-2-3-4): "))
+            if choice in [1, 2, 3, 4]:
                 return choice
             else:
-                print("Invalid input. Please choose 1, 2, or 3.")
+                print("Invalid input. Please choose 1, 2, 3 or 4.")
         except ValueError:
             print("Please enter a valid number.")
 
@@ -71,7 +76,47 @@ def getFlightsInitializer() -> list[FlightBase] | None:
             return flights
 
     except Exception as e:
-        print(f"Couldn't retrieve flights: {str(e)}")
+        print(f"Flight retrieval error: {str(e)}")
+        input("Press Enter to return to main menu.")
+        return None
+    
+def displayBookingList(bookingList):
+
+    columnWidth = "| {:<4} | {:<19} | {:<10} → {:<10} | {:<20} |"
+    
+    totalWidth = len(columnWidth.format("", "", "", "", ""))
+    
+    print("\n")
+    print("┌" + "─" * (totalWidth - 2) + "┐")
+    print("|{:^{width}}|".format("Booking List", width=totalWidth - 2))
+    print("|" + "─" * (totalWidth - 2) + "|")
+
+    for booking in bookingList:
+        print(columnWidth.format(
+            booking.id,
+            booking.booking_date.strftime("%Y-%m-%d %H:%M"),
+            booking.flight.origin_airport.code,
+            booking.flight.destination_airport.code,
+            f"{booking.first_name} {booking.surname}"
+        ))
+
+    print("└" + "─" * (totalWidth - 2) + "┘")
+
+def getBookingsInitializer() -> list[BookingModel] | None:
+    try:
+        with Session(bind=engine) as session:
+            bookingData = GetAllBookings()
+            bookings = session.execute(bookingData).scalars().all()
+
+            if not bookings:
+                print("No bookings were found.")
+                input("Press Enter to return to main menu.")
+                return None
+
+            return bookings
+
+    except Exception as e:
+        print(f"Booking retrieval error: {str(e)}")
         input("Press Enter to return to main menu.")
         return None
 
@@ -81,12 +126,21 @@ def InputHandler():
         choice = displayMainMenu()
 
         if choice == 1:
-            getFlightsInitializer()
+            flights = getFlightsInitializer()
+            if flights:
+                displayFlightList(flights)
+                BookingFlow()
+                input("Press Enter to return to main menu.")
         elif choice == 2:
-            print("Cancel Booking - Coming Soon")
-            input("Press Enter to return to main menu.")
+            bookings = getBookingsInitializer()
+            if bookings:
+                displayBookingList(bookings)
+                CancelFlow()
+                input("Press Enter to return to main menu.")
         elif choice == 3:
-            print("Booking List - Coming Soon")
+            bookings = getBookingsInitializer()
+            displayBookingList(bookings)
             input("Press Enter to return to main menu.")
-
-InputHandler()
+        elif choice == 4:
+            print("Goodbye!")
+            break

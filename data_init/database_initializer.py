@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Float, String, Boolean, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, Float, String, Boolean, DateTime, ForeignKey, UniqueConstraint
 from datetime import datetime, timezone
 from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy import create_engine
@@ -78,6 +78,10 @@ class Booking(Base):
     email = Column(String, nullable=False)
 
     flight = relationship('Flight', back_populates='bookings')
+
+    __table_args__ = (
+        UniqueConstraint('first_name', 'surname', 'flight_id', name='unique_passenger_booking'),
+    )
 
 db_path = os.path.abspath(os.path.join(__file__, "..", "..", "flight_radar.db"))
 engine = create_engine(f"sqlite:///{db_path}", echo=False)
