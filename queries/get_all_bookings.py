@@ -1,6 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.sql.dml import Select
-from database_initializer import Booking, Flight, Airport, City
+from data_init.database_initializer import Booking, Flight, Airport, City
 
 def GetAllBookings() -> Select:
 

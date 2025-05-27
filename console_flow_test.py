@@ -12,7 +12,6 @@ for name in logging.root.manager.loggerDict:
 logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 logging.getLogger('sqlalchemy.pool').setLevel(logging.WARNING)
 
-
 def displayMainMenu() -> int:
 
     print("\n")

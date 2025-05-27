@@ -14,3 +14,5 @@ def RunSetup():
     LoadAllData()
 
     print("Thanks for the patience. The database is up and running.")
+
+RunSetup()

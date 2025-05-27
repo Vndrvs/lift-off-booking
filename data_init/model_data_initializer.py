@@ -1,6 +1,7 @@
 # component responsible for running the loader functions on the csv files
-# which contain records which we need to class-ify (haha)
-# it looks ugly and overcomplicated, because it is ugly and overcomplicated
+# which contain the flight and airline records which we need to instantiate
+# it looks ugly and overcomplicated, but it serves a purpose:
+
 
 from sqlalchemy.orm import Session
 from sqlalchemy import insert, select
@@ -8,9 +9,31 @@ from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from data_init.database_initializer import engine, Airline, Flight
 from data_init.model_loaders.load_airlines import LoadAirlinesFromCsv, PrepareAirlineList
 from data_init.model_loaders.load_flights import LoadFlightsFromCsv, PrepareFlightList
+from utils.insert_logger import Logger
+
+# inserts airlines into the table
+def InsertAirlines(session):
+
+    initializedRecords = 0
+    airlines = LoadAirlinesFromCsv("data/airlines.csv")
+    airline_rows = PrepareAirlineList(airlines)
+
+    if not airline_rows:
+        print("No airlines found.")
+        return
+
+    stmt = sqlite_insert(Airline).values(airline_rows)
+  
+    # if the airline name matches an existing one in the database, that record will be skipped
+    stmt = stmt.on_conflict_do_nothing(index_elements=["name"])
+    result = session.execute(stmt)
+    initializedRecords = result.rowcount
+
+    Logger(initializedRecords, "Airlines")
 
 # this tuple is responsible for loading the flight records in the database into the memory for comparison
 def GetExistingFlightTuples(session):
+
     stmt = select(
         Flight.date,
         Flight.is_international,
@@ -23,40 +46,23 @@ def GetExistingFlightTuples(session):
     result = session.execute(stmt)
     return set(result.all())
 
-# inserts airlines into the table
-def InsertAirlines(session):
-    airlines = LoadAirlinesFromCsv("data/airlines.csv")
-    airline_rows = PrepareAirlineList(airlines)
-
-    if not airline_rows:
-        print("No airlines found.")
-        return
-
-    stmt = sqlite_insert(Airline).values(airline_rows)
-    # if the airline name matches an existing one in the database, that record will be skipped
-    stmt = stmt.on_conflict_do_nothing(index_elements=["name"])
-    result = session.execute(stmt)
-    count = result.rowcount or 0
-
-    if count:
-        print(f"{count} airlines inserted.")
-    else:
-        print("No new airlines to insert.")
-
 # inserts flights into the table
+# (in real-life scenarios, the uniqueness of the flight records is not validated on the booking system side
+# usually, that process is handled by the planning software of the airlines, so I had to create a makeshift solution:)
 def InsertFlights(session):
-    flights = LoadFlightsFromCsv("data/flights.csv")
-    flight_rows = PrepareFlightList(flights)
 
-    if not flight_rows:
+    flights = LoadFlightsFromCsv("data/flights.csv")
+    flightRows = PrepareFlightList(flights)
+
+    if not flightRows:
         print("No flights found.")
         return
 
-    # loads existing flight records
+    # loads all existing flight records already in the dbase
     existing = GetExistingFlightTuples(session)
-    new_rows = []
+    newRows = []
 
-    for row in flight_rows:
+    for row in flightRows:
         flight_tuple = (
             row["date"],
             row["is_international"],
@@ -66,15 +72,15 @@ def InsertFlights(session):
             row["ticket_fare"],
             row["passenger_limit"]
         )
-        # if a record with 100% matching data exists in the database, it skips it
         if flight_tuple not in existing:
-            new_rows.append(row)
+            newRows.append(row)
 
-    if new_rows:
-        session.execute(insert(Flight), new_rows)
-        print(f"{len(new_rows)} flights inserted.")
-    else:
-        print("No new flights to insert.")
+    initializedRecords = 0
+    if newRows:
+        session.execute(insert(Flight), newRows)
+        initializedRecords = len(newRows)
+
+    Logger(initializedRecords, "Flights")
 
 def LoadAllData():
     try:

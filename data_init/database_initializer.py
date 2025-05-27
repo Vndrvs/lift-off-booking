@@ -83,6 +83,5 @@ db_path = os.path.abspath(os.path.join(__file__, "..", "..", "flight_radar.db"))
 engine = create_engine(f"sqlite:///{db_path}", echo=False)
 
 def InitializeDatabase():
-    print("Creating tables...")
     Base.metadata.create_all(engine)
-    print("Tables created.")
+    print("Database initialized.\n")
