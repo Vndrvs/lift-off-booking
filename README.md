@@ -96,7 +96,7 @@ I'll totally build a GUI for it to extend my UI portfolio later on.
 
 ## Database Schema
 
-![Database Schema](github_img/database_visualizer.png)
+![Database Schema](github_img/dbase_visualizer.png)
 
 The project uses a SQLite database designed with normalized relations to ensure integrity and scalability. The key tables in the schema are:
 
