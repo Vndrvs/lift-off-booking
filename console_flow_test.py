@@ -1,4 +1,4 @@
-from queries.get_all_flights import getAllFlights 
+from queries.get_all_flights import GetAllFlights 
 from sqlalchemy.orm import Session
 from data_init.database_initializer import engine
 import logging
@@ -59,7 +59,7 @@ def displayFlightList(flightList):
 def getFlightsInitializer():
 
     try:
-        flightData = getAllFlights()
+        flightData = GetAllFlights()
         flights = session.execute(flightData).scalars().all()
 
         if not flights:
@@ -74,7 +74,7 @@ def getFlightsInitializer():
         input("Press Enter to return to main menu.")
 
 
-def inputHandler():
+def InputHandler():
     while True:
         session = Session(bind=engine)
         choice = displayMainMenu()
@@ -88,5 +88,5 @@ def inputHandler():
             print("Booking List - Coming Soon")
             input("Press Enter to return to main menu.")
 
-inputHandler()
+InputHandler()
 

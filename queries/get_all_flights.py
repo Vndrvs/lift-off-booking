@@ -1,10 +1,11 @@
 from sqlalchemy import select
 from sqlalchemy.orm import aliased
 from sqlalchemy.sql import Select
-from database_initializer import Flight, Airport, City, Country
+from data_init.database_initializer import Flight, Airport, City, Country
 
 def GetAllFlights() -> Select:
 
+    # duplicate record type handling
     origin_airport = aliased(Airport)
     destination_airport = aliased(Airport)
     origin_city = aliased(City)
@@ -12,7 +13,7 @@ def GetAllFlights() -> Select:
     origin_country = aliased(Country)
     destination_country = aliased(Country)
 
-
+    # query all flights from db
     allFlights = (
         select(Flight)
         .join(Flight.airline)

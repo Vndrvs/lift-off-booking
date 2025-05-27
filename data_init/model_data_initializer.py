@@ -2,7 +2,6 @@
 # which contain the flight and airline records which we need to instantiate
 # it looks ugly and overcomplicated, but it serves a purpose:
 
-
 from sqlalchemy.orm import Session
 from sqlalchemy import insert, select
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
@@ -15,21 +14,27 @@ from utils.insert_logger import Logger
 def InsertAirlines(session):
 
     initializedRecords = 0
-    airlines = LoadAirlinesFromCsv("data/airlines.csv")
-    airline_rows = PrepareAirlineList(airlines)
 
-    if not airline_rows:
-        print("No airlines found.")
-        return
+    try:
+        airlines = LoadAirlinesFromCsv("data/airlines.csv")
+        airline_rows = PrepareAirlineList(airlines)
 
-    stmt = sqlite_insert(Airline).values(airline_rows)
-  
-    # if the airline name matches an existing one in the database, that record will be skipped
-    stmt = stmt.on_conflict_do_nothing(index_elements=["name"])
-    result = session.execute(stmt)
-    initializedRecords = result.rowcount
+        if not airline_rows:
+            print("No airlines found.")
+            return
 
-    Logger(initializedRecords, "Airlines")
+        stmt = sqlite_insert(Airline).values(airline_rows)
+    
+        # if the airline name matches an existing one in the database, that record will be skipped
+        stmt = stmt.on_conflict_do_nothing(index_elements=["name"])
+        result = session.execute(stmt)
+        initializedRecords = result.rowcount
+
+        Logger(initializedRecords, "Airlines")
+
+    except Exception as e:
+        session.rollback()
+        print(f"Airlines: Insertion error")
 
 # this tuple is responsible for loading the flight records in the database into the memory for comparison
 def GetExistingFlightTuples(session):
@@ -51,42 +56,51 @@ def GetExistingFlightTuples(session):
 # usually, that process is handled by the planning software of the airlines, so I had to create a makeshift solution:)
 def InsertFlights(session):
 
-    flights = LoadFlightsFromCsv("data/flights.csv")
-    flightRows = PrepareFlightList(flights)
-
-    if not flightRows:
-        print("No flights found.")
-        return
-
-    # loads all existing flight records already in the dbase
-    existing = GetExistingFlightTuples(session)
-    newRows = []
-
-    for row in flightRows:
-        flight_tuple = (
-            row["date"],
-            row["is_international"],
-            row["airline_id"],
-            row["origin_airport_id"],
-            row["destination_airport_id"],
-            row["ticket_fare"],
-            row["passenger_limit"]
-        )
-        if flight_tuple not in existing:
-            newRows.append(row)
-
     initializedRecords = 0
-    if newRows:
-        session.execute(insert(Flight), newRows)
-        initializedRecords = len(newRows)
+    try:
+        flights = LoadFlightsFromCsv("data/flights.csv")
+        flightRows = PrepareFlightList(flights)
 
-    Logger(initializedRecords, "Flights")
+        if not flightRows:
+            print("No flights found.")
+            return
+
+        # loads all existing flight records already in the dbase
+        existing = GetExistingFlightTuples(session)
+        newRows = []
+
+        for row in flightRows:
+            flight_tuple = (
+                row["date"],
+                row["is_international"],
+                row["airline_id"],
+                row["origin_airport_id"],
+                row["destination_airport_id"],
+                row["ticket_fare"],
+                row["passenger_limit"]
+            )
+            if flight_tuple not in existing:
+                newRows.append(row)
+
+        if newRows:
+            session.execute(insert(Flight), newRows)
+            initializedRecords = len(newRows)
+
+        Logger(initializedRecords, "Flights")
+
+    except Exception as e:
+        session.rollback()
+        print(f"Flights: Insertion error")
 
 def LoadAllData():
+
     try:
         with Session(bind=engine) as session:
             InsertAirlines(session)
             InsertFlights(session)
             session.commit()
+        
+        print()
+
     except Exception as e:
-        print(f"Insertion error: {e}")
+        print(f"Session commit error.")

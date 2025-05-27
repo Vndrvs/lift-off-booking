@@ -20,7 +20,7 @@ def CollectBookingInput(flight_ids: list[int]):
         try:
             flightId = int(input("Enter Flight number: "))
             if flightId not in flight_ids:
-                print("Invalid Flight number.")
+                print("Invalid Flight number. Please try again: ")
                 continue
 
         except ValueError:
